@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image } from 'react-native';
-import { Input, CheckBox, Button, Icon } from 'react-native-elements';
+import React from 'react';
+import { View, Text, Image } from 'react-native';
+import { Input,  Button } from 'react-native-elements';
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator';
 import { connect } from 'react-redux';
 
 import { editData } from '../actions/contact';
+import { CommonActions } from '@react-navigation/native';
 
 
 const EditContact = (props) => {
@@ -15,7 +16,7 @@ const EditContact = (props) => {
   const [contact, setContact] = React.useState({
     firstName: data.firstName,
     lastName: data.lastName,
-    age: data.age
+    age: data.age.toString()
   });
   const [photo, setPhoto] = React.useState(data.photo);
 
@@ -70,27 +71,28 @@ const EditContact = (props) => {
     })
   }
   const editing = async (id, firstName, lastName, age, photo) => {
+    age = parseInt(age);
     const newData = {
       firstName, lastName, age, photo
     }
     const res = await props.editData(id, newData);
-    if (res) props.history.push('/');
+    if (res) props.navigation.dispatch(
+      CommonActions.navigate({name: 'List'})
+    )
   }
+  const img = photo ? (<Image source={{ uri: photo }}/>) : <Text></Text>;  
 
   return (
-    <ScrollView>
       <View >
         <View >
-          <Image
-            source={{ uri: photo }}
-          />
+          {img}
           <Button
             title='Camera'
-            onPress={getImageFromCamera()}
+            onPress={()=>getImageFromCamera()}
           />
           <Button
             title='Gallery'
-            onPress={getImageFromGallery()}
+            onPress={()=>getImageFromGallery()}
           />
         </View>
         <Input
@@ -107,15 +109,16 @@ const EditContact = (props) => {
           placeholder="Age"
           onChangeText={(data) => change('age', data)}
           value={contact.age}
+          keyboardType="numeric"
+
         />
-        <View style={styles.formButton}>
+        <View >
           <Button
             onPress={() => editing(data.id, contact.firstName, contact.lastName, contact.age, photo)}
             title="Add Data"
           />
         </View>
       </View>
-    </ScrollView>
   );
 }
 

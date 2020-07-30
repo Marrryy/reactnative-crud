@@ -1,5 +1,4 @@
 import axios from '../config/axios';
-// import * as url from '../enums/url';
 import {
   GET_CONTACT
 } from '../enums/mutations'

@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-// import React, { component } from 'react';
-import { ScrollView, View, Picker,Text, TouchableHighlight, Button } from 'react-native';
+import { ScrollView, View,Text,TouchableOpacity, YellowBox, Button } from 'react-native';
 import { connect } from 'react-redux';
 import { Card, Fab } from 'react-native-elements';
-// import { Add } from '@material-ui/icons';
 
 import {
   getData
@@ -17,14 +15,35 @@ const ListContact =(props)=> {
   console.log(909090900)
   useEffect(() => {
     props.getData();
+    YellowBox.ignoreWarnings([
+      'Warning: componentWillMount is deprecated',
+      'Warning: componentWillReceiveProps is deprecated',
+    ]);
   }, []);
 
   return (
-    <View style={{width: '100%'}}>
+    <ScrollView >
       <View style={{
-        justifyContent: "space-between",
-        alignItems: "center"
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom:20
       }}>
+        <View 
+          style={{width:"100%"}}
+          >
+
+<Button
+            title='Create'
+            onPress={() =>
+              props.navigation.dispatch(
+                CommonActions.navigate({
+                  name: 'Post'
+                })
+              )}
+            
+          />
+
+</View>
         {
           props.contacts && props.contacts.data.map((data, i) => {
             let urlphoto = "";
@@ -34,11 +53,10 @@ const ListContact =(props)=> {
               urlphoto = data.photo
             }
             return (
-              // <Text key={i}>bgnst</Text>
-              <TouchableHighlight key={i}
+              <TouchableOpacity key={i}
               style={{width: '100%'}}
                 onPress={() =>
-                  navigation.dispatch(
+                  props.navigation.dispatch(
                     CommonActions.navigate({
                       name: 'View',
                       params: {
@@ -47,7 +65,6 @@ const ListContact =(props)=> {
                     })
                   )
 
-                  // navigate('View', { contact: data })
                 }
                 style={{ width: "100%", margin:20}}
               >
@@ -58,7 +75,6 @@ const ListContact =(props)=> {
                     imageStyle={{ height: 300 }}
                     titleStyle={{ textTransform: "capitalize", fontSize: 20 }}
                     title={data.firstName + " " + data.lastName}
-                    // image={{ uri: url.getImage(data.url.split("pokemon")[1].replace(/\//g, "")) }}
                     image={{ uri: urlphoto }}
                   >
                     <Text style={{ marginBottom: 10 }}>
@@ -67,27 +83,15 @@ const ListContact =(props)=> {
                   </Card>
                 </View>
 
-              </TouchableHighlight>
+              </TouchableOpacity>
            
            );
           }
           )
         }
       </View>
-      <Fab color="secondary" aria-label="add" style={{
-        position: 'fixed',
-        right: '20px',
-        bottom: '20px'
-      }}>
-        <Button onPress={() => navigation.dispatch(
-  CommonActions.navigate({
-    name: 'Post'
-  })
-)} />
-      </Fab>
       
-     </View> 
-      // <Text>asdadsadasda</Text>
+     </ScrollView> 
   );
 
 }

@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, ScrollView, Image } from 'react-native';
-import { Input, CheckBox, Button, Icon } from 'react-native-elements';
+import React from 'react';
+import { View, Text, ScrollView, Image } from 'react-native';
+import { Input, Button } from 'react-native-elements';
 import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator';
 import { connect } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 
 import { postData } from '../actions/contact';
 
 
 const PostContact = (props) => {
   const [contact, setContact] = React.useState({
-    firstName: "aaa",
-    lastName: "aaaa",
-    age: 1
+    firstName: "",
+    lastName: "",
+    age: ""
   });
   const [photo, setPhoto] = React.useState("");
   
@@ -70,27 +71,32 @@ const PostContact = (props) => {
   }
   const posting = async (firstName, lastName, age, photo) => {
     try {
+      age = parseInt(age);
+    
       if (photo === "") {
         photo = "N/A"
       }
       const newData = {
         firstName, lastName, age, photo
       }
-      props.postData(newData);
-      // if(res)  props.history.push('/');
+      const res =props.postData(newData);
+      if(res)  props.navigation.dispatch(
+        CommonActions.navigate({name: 'List'})
+      );
     }
     catch (e) {
       console.log(e)
     }
   }
 
+    const img = photo ? (<Image source={{ uri: photo }}/>) : <Text></Text>;  
+
   return (
     <ScrollView>
       <View >
         <View >
-          <Image
-            source={{ uri: photo }}
-          />
+          {img}
+
           <Button
             title='Camera'
             onPress={()=>{getImageFromCamera()}}
@@ -100,20 +106,23 @@ const PostContact = (props) => {
             onPress={()=>{getImageFromGallery()}}
           />
         </View>
+        
         <Input
           placeholder="First Name"
-          onChangeText={(data) => change('firstName', data)}
+          onChangeText={(c) => change('firstName', c)}
           value={contact.firstName}
         />
         <Input
           placeholder="Last Name"
-          onChangeText={(data) => change('lastName', data)}
+          onChangeText={(c) => change('lastName', c)}
           value={contact.lastName}
         />
         <Input
           placeholder="Age"
-          onChangeText={(data) => change('age', data)}
+          onChangeText={(c) => change('age', c)}
           value={contact.age}
+          keyboardType="numeric"
+
         />
         <View >
           <Button

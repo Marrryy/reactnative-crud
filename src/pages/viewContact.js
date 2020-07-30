@@ -1,16 +1,17 @@
 
-import React, { useEffect } from 'react';
-import { ScrollView, View, Picker, TouchableHighlight, Alert } from 'react-native';
+import React from 'react';
+import {  View, Alert, Button, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Card } from 'react-native-elements';
-
+import { CommonActions } from '@react-navigation/native';
+import noImg from "../../public/no-image.jpg";
 import {
   deleteData
 } from "../actions/contact";
 
-import * as url from '../enums/url';
 
 const ViewContact = (props) => {
+  console.log(props)
   const deleteContact = async (id) =>{
     await props.deleteData(id)
   }
@@ -33,17 +34,10 @@ const ViewContact = (props) => {
   }
 
   const data = props.route.params.contact;
-  const { navigate } = this.props.navigation;
 
-  let urlphoto = "";
-  if (data.photo == "N/A" || data.photo== "") {
-    urlphoto = "../../public/no-image.jpg"
-  } else {
-    urlphoto = data.photo
-  }
 
+  const img = data.photo ? {uri: data.photo} : noImg;
   return (
-    <ScrollView>
       <View style={{
         justifyContent: "space-between",
         alignItems: "center"
@@ -54,27 +48,34 @@ const ViewContact = (props) => {
           imageStyle={{ height: 300 }}
           titleStyle={{ textTransform: "capitalize", fontSize: 20 }}
           title={data.firstName + " " + data.lastName}
-          image={{ uri: urlphoto }}
+          image={img}
         >
           <Text style={{ marginBottom: 10 }}>
             Age {data.age}
           </Text>
-          <Button title='Edit' onPress={() => 
-            navigation.dispatch(
+        </Card>
+
+        <View 
+          style={{width:"100%", marginTop:40}}
+          >
+
+        <Button title='Edit' 
+          onPress={() => {
+            props.navigation.dispatch(
               CommonActions.navigate({
                 name: 'Edit',
                 params: {
                   contact: data
                 }
               })
-            )
-            // navigate('Edit', { contact: data })
+              )
+            }
             } />
           <Button title='Delete' onPress={() => deleting(data.id)} />
-        </Card>
 
+        </View>
+        
       </View>
-    </ScrollView>
   );
 }
 

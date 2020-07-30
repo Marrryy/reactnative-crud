@@ -16,11 +16,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yourcompany.lawencotest",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.yourcompany.lawencotest",
+      "versionCode": 1
     }
   }
 }

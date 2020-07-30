@@ -18,12 +18,19 @@ const Router = () => {
   const Stack = createStackNavigator();
   return (
     <Provider store={store}>
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <NavigationContainer style={{width: '100%'}}>
-          <Stack.Navigator style={{width: '100%'}}>
-             <Stack.Screen style={{width: '100%'}}
+      <View  style={{ position: 'absolute',
+    top: 35,
+    left:0,
+    right:0,
+    bottom:0 }} removeClippedSubviews={false}>
+        {/* <ListContact/> */}
+        <NavigationContainer>
+          <Stack.Navigator>
+             <Stack.Screen
               name="List"
-              component={ListContact} />
+              component={ListContact} 
+              
+              />
 
             <Stack.Screen
               name="View"
